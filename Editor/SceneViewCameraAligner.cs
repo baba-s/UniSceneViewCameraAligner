@@ -1,18 +1,33 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace KoganeUnityLib
+namespace UniSceneViewCameraAligner
 {
+	/// <summary>
+	/// Scene ビューと Game ビューのカメラを同期するエディタ拡張
+	/// </summary>
 	[InitializeOnLoad]
 	internal static class SceneViewCameraAligner
 	{
-		private const string ITEM_NAME = "Edit/Scene View Camera Align";
+		//================================================================================
+		// 定数
+		//================================================================================
+		private const string ITEM_NAME = "Edit/UniSceneViewCameraAligner/Scene ビューと Game ビューのカメラを同期";
 
+		//================================================================================
+		// 関数（static）
+		//================================================================================
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		static SceneViewCameraAligner()
 		{
 			EditorApplication.update += OnUpdate;
 		}
 
+		/// <summary>
+		/// Unity メニューからカメラを同期するかどうかを変更します
+		/// </summary>
 		[MenuItem( ITEM_NAME )]
 		private static void Toggle()
 		{
@@ -20,6 +35,9 @@ namespace KoganeUnityLib
 			Menu.SetChecked( ITEM_NAME, !isOn );
 		}
 
+		/// <summary>
+		/// Scene ビューと Game ビューのカメラを同期します
+		/// </summary>
 		private static void OnUpdate()
 		{
 			var isOn = Menu.GetChecked( ITEM_NAME );
@@ -33,13 +51,16 @@ namespace KoganeUnityLib
 			var sceneCamera = Camera.main;
 
 			if ( sceneCamera == null ) return;
-
+			
 			var sceneViewCamera = sceneView.camera;
 
 			if ( sceneViewCamera == null ) return;
 
-			sceneCamera.transform.position = sceneViewCamera.transform.position;
-			sceneCamera.transform.rotation = sceneViewCamera.transform.rotation;
+			var sceneCameraTransform     = sceneCamera.transform;
+			var sceneViewCameraTransform = sceneViewCamera.transform;
+
+			sceneCameraTransform.position = sceneViewCameraTransform.position;
+			sceneCameraTransform.rotation = sceneViewCameraTransform.rotation;
 		}
 	}
 }
